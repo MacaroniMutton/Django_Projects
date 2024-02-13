@@ -1,0 +1,52 @@
+{% extends 'food/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <title>Form</title>
+    {% endblock %}
+</head>
+<body>
+
+    {% block body %}
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Add an Item</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Item Name</label>
+                {{ form.item_name }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Item Description</label>
+                {{ form.item_desc }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Item Price</label>
+                {{ form.item_price }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Item Image</label>
+                {{ form.item_image }}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+    </div>
+
+    {% endblock %}
+
+</body>
+</html>
+
+
+<h1>Add an Item</h1>
+<form method="POST">
+    {% csrf_token %}
+    <div class="itemform">
+        {{ form }}
+    </div>
+    <button type="submit" class="mx-3 my-3 btn btn-primary">Save</button>
+</form>
+
+

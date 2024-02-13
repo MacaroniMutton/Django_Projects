@@ -1,0 +1,42 @@
+Logged in as {{ user }} <a href="{% url 'users:logout' %}">Logout</a>
+<br>
+<br>
+
+<a href="{% url 'attendance:add' %}">Add Subject</a>
+<br>
+<br>
+<hr>
+
+{% if subjects %}
+
+{% for subject in subjects %}
+
+{{ subject.name }}
+<a href="{% url 'attendance:report' subject.id %}">Subject Report</a>
+<br>
+{{ subject.classes_attended }}/{{ subject.total_classes }} {{ subject.percentage }}%
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="form_id" value="Tick">
+    <button name="submit" value="{{ subject.id }}" type="submit">Present</button>
+</form>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="form_id" value="Cross">
+    <button name="submit" value="{{ subject.id }}" type="submit">Absent</button>
+</form>
+<a href="{% url 'attendance:edit' subject.id %}">Edit Subject details</a>
+<br>
+<a href="{% url 'attendance:delete' subject.id %}">Delete Subject</a>
+<br>
+<br>
+<hr>
+
+{% endfor %}
+
+{% else %}
+
+No subjects added.
+
+{% endif %}
+

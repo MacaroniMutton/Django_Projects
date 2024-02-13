@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Calorie Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            Logged in as {{ user.username }}
+          </span>
+        </div>
+      </nav>
+
+    <div class="container">
+        <br>
+        <form action="" method="GET">
+            <div class="form-group row">
+                <div class="col-md-3 d-flex align-items-end"><h4>Set a Calorie Goal</h4></div>
+                <div class="col-md-3">
+                    <input name="goal" id="goal" type="number">
+                    <button class="btn btn-primary" type="submit">Set</button>
+                </div>
+                
+            </div>
+        </form>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                Calorie Goal: {{ user.goal.goal }}Kcal
+            </div>
+            <div class="col-md-6">
+                Calories Completed: {{ total.calories }}Kcal
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-9 offset-1">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ calorie_percentage }}%" aria-valuenow="{{ calorie_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ calorie_percentage }}%</div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="" method="POST">
+                    <div class="form-group row">
+                        {% csrf_token %}    
+                        <label class="col-md-2 d-flex align-items-end">
+                            <b>Select Food to Add</b>
+                        </label>
+                    <select class="col-md-6 form-control" name="food_consumed" id="food_consumed">
+                        {% for food_item in food_items %}
+                            <option value="{{ food_item.name }}">{{ food_item.name }}</option>
+                        {% endfor %}    
+                    </select>
+                    <button class="btn btn-success" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div>
+                    <h4>Today's Consumption</h4>
+                </div>
+
+                <table name="table" id="table" class="table table-striped table-primary">
+                    <tr class="bg-primary text-white">
+                        <th>Food Item</th>
+                        <th>Carbs(g)</th>
+                        <th>Proteins(g)</th>
+                        <th>Fats(g)</th>
+                        <th>Calories(Kcal)</th>
+                        <th>Remove Item</th>
+                    </tr>
+                    {% for c in consumed %}
+                        <tr>
+                            <td>{{ c.food_consumed.name }}</td>
+                            <td>{{ c.food_consumed.carbs }}</td>
+                            <td>{{ c.food_consumed.proteins }}</td>
+                            <td>{{ c.food_consumed.fats }}</td>
+                            <td>{{ c.food_consumed.calories }}</td>
+                            <td><a class="btn btn-danger" href="/delete/{{ c.id }}">X</a></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <th>Total:</th>
+                        <th id="carbs">{{ total.carbs }}</th>
+                        <th id="proteins">{{ total.proteins }}</th>
+                        <th id="fats">{{ total.fats }}</th>
+                        <th id="calories">{{ total.calories }}</th>
+                        <th></th>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-5 offset-1">
+                <div>
+                    <h4>Today's breakdown</h4>
+                </div>
+                <div class="card-header bg-primary text-white">
+                    <h4>Macronutrients breakdown</h4>
+                </div>
+                <div class="col-md-12">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    // var table = document.getElementById('table');
+    // var carbs=0, proteins=0, fats=0, calories=0;
+    // for(let i=1; i<table.rows.length-1; i++) {
+    //     carbs += table.rows[i].cells[1].innerHTML;
+    //     proteins += table.rows[i].cells[2].innerHTML;
+    //     fats += table.rows[i].cells[3].innerHTML;
+    //     calories += table.rows[i].cells[4].innerHTML;
+    // }
+    // document.getElementById('carbs').innerHTML = carbs;
+    // document.getElementById('proteins').innerHTML =proteins;
+    // document.getElementById('fats').innerHTML = fats;
+    // document.getElementById('calories').innerHTML = calories;
+
+    var carbs = Number(document.getElementById('carbs').innerHTML)
+    var proteins = Number(document.getElementById('proteins').innerHTML)
+    var fats = Number(document.getElementById('fats').innerHTML)
+    var tot = carbs+proteins+fats
+    var carbsP = carbs*100/tot
+    var proteinsP = proteins*100/tot
+    var fatsP = fats*100/tot
+
+
+    const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+  type: 'pie',
+  data: {
+    labels: ['Carbs '+carbsP.toFixed(2)+"%", 'Proteins '+proteinsP.toFixed(2)+"%", 'Fats '+fatsP.toFixed(2)+"%"],
+    datasets: [{
+      label: '# of Votes',
+      data: [carbs, proteins, fats],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+
+
+</script>
+
+
+
+</html>

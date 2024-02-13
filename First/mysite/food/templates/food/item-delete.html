@@ -1,0 +1,23 @@
+{% extends 'food/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+        <title>Delete</title>
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+        <div class="row my-5">
+            <form method="POST">
+                {% csrf_token %}
+                <h2>Are you sure you want to delete {{ item.item_name }} ?</h2>
+                <button type="submit" class="btn btn-primary mx-4">Yes</button>
+                <a href="{% url 'food:detail' item.id %}" class="btn btn-secondary">No</a>
+            </form>
+        </div>
+    {% endblock %}
+</body>
+</html>

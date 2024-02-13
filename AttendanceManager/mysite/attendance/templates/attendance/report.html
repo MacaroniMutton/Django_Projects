@@ -1,0 +1,10 @@
+{{ subject.name }}
+<br>
+{% for report in reports %}
+
+    {{ report.date_time.date }}
+    {{ report.date_time.time }}
+    {{ report.status }}
+    <br>
+
+{% endfor %}

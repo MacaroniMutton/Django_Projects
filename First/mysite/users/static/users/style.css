@@ -1,0 +1,18 @@
+body {
+    background-color: rgb(1, 22, 41);
+}
+
+.screenCenter {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+#redBlock {
+    height: 100px;
+    width: 100px;
+    background-color: red;
+}

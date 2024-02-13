@@ -1,0 +1,39 @@
+{% extends 'food/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+        <title>DeleteForm</title>
+    {% endblock %}
+</head>
+<body>
+
+    {% block body %}
+
+        <div class="container mt-4">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div>
+                    <label>Search for an item:</label>
+                    {{ form.item_name }}
+                </div>
+                <div>
+                    <small>
+                        {% if exists %}
+                        {% else %}
+                        Item not found.
+                        {% endif %}
+                    </small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary mx-4 mt-3">Search</button>
+            </form>
+        </div>
+        
+    {% endblock %}
+    
+</body>
+</html>
+

@@ -1,0 +1,18 @@
+body {
+    background-color: aliceblue;
+}
+
+ul {
+    list-style: none;
+}
+
+.myCard {
+    border-radius: 5%;
+}
+
+.screenCenter {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}

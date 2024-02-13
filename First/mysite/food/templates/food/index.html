@@ -1,0 +1,52 @@
+{% extends 'food/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+        <title>Home</title>
+    {% endblock %}
+    
+</head>
+<body>
+
+    {% block body %}
+        {% if items %}
+            {% for item in items %}
+                <div class="row my-5">
+                    <div class="col-md-3 offset-md-2">
+                        <img class="myCard" height="250px" src="{{ item.item_image }}" alt="{{ item.item_name }}">
+                    </div>
+                    <div class="col-md-4 d-flex flex-column align-items-start justify-content-center">
+                        <h3>{{ item.item_name }}</h3>
+                        <h5>{{ item.item_desc }}</h5>
+                        <h6>Price: ${{ item.item_price }}</h6>
+                        <h6 class="mt-2">Added by: {{ item.user_name }}</h6>
+                    </div>
+                    <div class="col-md-2 d-flex flex-column align-items-start justify-content-center">
+                        <a type="button" class="btn btn-outline-info" href="{% url 'food:detail' item.id %}">Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+                <h1 class="mx-4 my-4">Storage is Empty.</h1>
+        {% endif %}
+    {% endblock %}
+
+
+
+    <!-- old code
+
+        <h1>This is the home page.</h1>
+        <ul>
+            {% for item in items %}
+                <li><a href="/food/{{ item.id }}"> -- {{ item.item_name }} -- </a></li>
+                Removing hardcoded urls by using name of the path from urls.py
+                <li><a href="{% url 'food:detail' item.id %}"> -- {{ item.item_name }} -- </a></li>
+            {% endfor %}
+        </ul>   -->
+
+    
+</body>
+</html>
